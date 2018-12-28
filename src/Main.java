@@ -76,7 +76,41 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    public static boolean checkDuplicateRow(int[][] board) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (board[j][i] != 0) {
+                    for (int k = 0; k < SIZE; k++) {
+                        if (j != k) {
+                            if (board[j][i] == board[k][i]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
+    public static boolean checkDuplicateCol(int[][] board) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (board[i][j] != 0) {
+                    for (int k = 0; k < SIZE; k++) {
+                        if (j != k) {
+                            if (board[i][j] == board[i][k]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
