@@ -76,8 +76,25 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+
+    public static boolean checkRow(int row, int number) {
+        for (int i = 0; i < SIZE; i++) {
+            if (board[row][i] == number) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkCol(int col, int number) {
+        for (int i = 0; i < SIZE; i++) {
+            if (board[i][col] == number) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean checkDuplicateRow(int[][] board) {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
