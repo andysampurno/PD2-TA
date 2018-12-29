@@ -128,6 +128,33 @@ public class Main extends javax.swing.JFrame {
         }
         return false;
     }
+    
+        public static boolean checkDuplicateBox(int[][] board) {
+        for (int i = 0; i < SIZE; i = i += 3) {
+            for (int j = 0; j < SIZE; j += 3) {
+                for (int k = i; k < i + 3; k++) {
+                    for (int l = j; l < j + 3; l++) {
+                        if (board[k][l] != 0) {
+                            int count = 0;
+                            for (int m = i; m < i + 3; m++) {
+                                for (int n = j; n < j + 3; n++) {
+                                    if (board[k][l] == board[m][n]) {
+                                        count = count + 1;
+                                    }
+                                }
+                            }
+                            if (count > 1) {
+                                return true;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
