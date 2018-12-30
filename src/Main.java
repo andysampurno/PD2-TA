@@ -94,6 +94,23 @@ public class Main extends javax.swing.JFrame {
         }
         return false;
     }
+    
+    public static boolean checkBox(int row, int col, int number) {
+        int r = row - row % 3;
+        int c = col - col % 3;
+        for (int i = r; i < r + 3; i++) {
+            for (int j = c; j < c + 3; j++) {
+                if (board[i][j] == number) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isOk(int row, int col, int number) {
+        return !checkBox(row, col, number) && !checkRow(row, number) && !checkCol(col, number);
+    }
 
     public static boolean checkDuplicateRow(int[][] board) {
         for (int i = 0; i < SIZE; i++) {
