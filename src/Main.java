@@ -94,7 +94,7 @@ public class Main extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
     public static boolean checkBox(int row, int col, int number) {
         int r = row - row % 3;
         int c = col - col % 3;
@@ -145,8 +145,8 @@ public class Main extends javax.swing.JFrame {
         }
         return false;
     }
-    
-        public static boolean checkDuplicateBox(int[][] board) {
+
+    public static boolean checkDuplicateBox(int[][] board) {
         for (int i = 0; i < SIZE; i = i += 3) {
             for (int j = 0; j < SIZE; j += 3) {
                 for (int k = i; k < i + 3; k++) {
@@ -170,6 +170,17 @@ public class Main extends javax.swing.JFrame {
             }
         }
         return false;
+    }
+
+    public static int findZeroRow(int[][] board) {
+        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
+            for (int colIndex = 0; colIndex < board[rowIndex].length; colIndex++) {
+                if (board[rowIndex][colIndex] == 0) {
+                    return rowIndex;
+                }
+            }
+        }
+        return -1;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
