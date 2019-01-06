@@ -172,6 +172,10 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
 
+    public static boolean isNoDuplicate(int[][] board) {
+        return !checkDuplicateBox(board) && !checkDuplicateRow(board) && !checkDuplicateCol(board);
+    }
+    
     public static int findZeroRow(int[][] board) {
         for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
             for (int colIndex = 0; colIndex < board[rowIndex].length; colIndex++) {
@@ -181,6 +185,17 @@ public class Main extends javax.swing.JFrame {
             }
         }
         return -1;
+    }
+    
+    public static boolean isHaveZero(int[][] board) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (board[i][j] == EMPTY) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
