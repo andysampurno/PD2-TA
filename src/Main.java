@@ -1,14 +1,25 @@
+
+import java.util.ArrayList;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Reyhan
  */
+class State {
+
+    int[][] board;
+}
+
 public class Main extends javax.swing.JFrame {
+
+    static final int EMPTY = 0;
+    static final int SIZE = 9;
+    public int[][] board = new int[SIZE][SIZE];
 
     /**
      * Creates new form Main
@@ -26,21 +37,109 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblBoard = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        btnSolve = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        tblBoard.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"", null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "", "", "", "", "", "", "", "", ""
+            }
+        ));
+        jScrollPane1.setViewportView(tblBoard);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setText("Sudoku Solver");
+
+        btnSolve.setText("Solve");
+        btnSolve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSolveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnSolve)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSolve)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSolveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolveActionPerformed
+        // TODO add your handling code here:
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                try{
+                if (tblBoard.getValueAt(i, j) != null) {
+                    board[i][j] = Integer.parseInt(tblBoard.getValueAt(i, j).toString());
+                } else {
+                    board[i][j] = 0;
+                }
+                } catch(Exception e) {
+                    System.out.println(i);
+                    System.out.println(j);
+                    System.out.println(Integer.parseInt(tblBoard.getValueAt(i, j).toString()));
+                    throw e;
+                }
+            }
+        }
+        ArrayList<State> evaluated = new ArrayList<State>();
+        ArrayList<State> possibility = new ArrayList<State>();
+        State problemState = new State();
+        problemState.board = board;
+        evaluated.add(problemState);
+        evaluate(evaluated, possibility);
+        while (isHaveZero(evaluated.get(evaluated.size() - 1).board)) {
+            evaluate(evaluated, possibility);
+        }
+        int[][] a = evaluated.get(evaluated.size() - 1).board;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                tblBoard.setValueAt(a[i][j], i, j);
+            }
+        }
+    }//GEN-LAST:event_btnSolveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -77,7 +176,59 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    public static boolean checkRow(int row, int number) {
+    public void evaluate(ArrayList<State> qEvaluated, ArrayList<State> qPossibility) {
+        State lastEvaluatedState = qEvaluated.get(qEvaluated.size() - 1);
+        int[][] lastBoard = lastEvaluatedState.board;
+        ArrayList<int[][]> pBoard = findPosibilityBoard(lastBoard);
+        for (int i = 0; i < pBoard.size(); i++) {
+            if (isNoDuplicate(pBoard.get(i))) {
+                State pState = new State();
+                pState.board = pBoard.get(i);
+                qPossibility.add(pState);
+            }
+        }
+
+        if (qPossibility.size() > 0) {
+            State firstPossibility = qPossibility.get(0);
+            qPossibility.remove(0);
+            qEvaluated.add(firstPossibility);
+        }
+    }
+
+    public ArrayList<Integer> findPosibilityNumber(int[][] board) {
+        ArrayList<Integer> pNumber = new ArrayList<Integer>();
+        int zeroRow = findZeroRow(board);
+        int zeroCol = findZeroCol(board);
+        for (int number = 1; number <= SIZE; number++) {
+            if (isOk(zeroRow, zeroCol, number)) {
+                pNumber.add(number);
+            }
+        }
+        return pNumber;
+    }
+
+    public ArrayList<int[][]> findPosibilityBoard(int[][] board) {
+        ArrayList<int[][]> pBoard = new ArrayList<int[][]>();
+        ArrayList<Integer> pNumber = findPosibilityNumber(board);
+        int zeroRow = findZeroRow(board);
+        int zeroCol = findZeroCol(board);
+        for (int i = 0; i < pNumber.size(); i++) {
+            int[][] newBoard = new int[9][9];
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < SIZE; k++) {
+                    if (j == zeroRow && k == zeroCol) {
+                        newBoard[j][k] = pNumber.get(i);
+                    } else {
+                        newBoard[j][k] = board[j][k];
+                    }
+                }
+            }
+            pBoard.add(newBoard);
+        }
+        return pBoard;
+    }
+
+    public boolean checkRow(int row, int number) {
         for (int i = 0; i < SIZE; i++) {
             if (board[row][i] == number) {
                 return true;
@@ -86,7 +237,7 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
 
-    public static boolean checkCol(int col, int number) {
+    public boolean checkCol(int col, int number) {
         for (int i = 0; i < SIZE; i++) {
             if (board[i][col] == number) {
                 return true;
@@ -95,7 +246,7 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
 
-    public static boolean checkBox(int row, int col, int number) {
+    public boolean checkBox(int row, int col, int number) {
         int r = row - row % 3;
         int c = col - col % 3;
         for (int i = r; i < r + 3; i++) {
@@ -108,7 +259,7 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
 
-    public static boolean isOk(int row, int col, int number) {
+    public boolean isOk(int row, int col, int number) {
         return !checkBox(row, col, number) && !checkRow(row, number) && !checkCol(col, number);
     }
 
@@ -163,7 +314,6 @@ public class Main extends javax.swing.JFrame {
                             if (count > 1) {
                                 return true;
                             }
-
                         }
                     }
                 }
@@ -175,7 +325,7 @@ public class Main extends javax.swing.JFrame {
     public static boolean isNoDuplicate(int[][] board) {
         return !checkDuplicateBox(board) && !checkDuplicateRow(board) && !checkDuplicateCol(board);
     }
-    
+
     public static int findZeroRow(int[][] board) {
         for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
             for (int colIndex = 0; colIndex < board[rowIndex].length; colIndex++) {
@@ -186,7 +336,18 @@ public class Main extends javax.swing.JFrame {
         }
         return -1;
     }
-    
+
+    public static int findZeroCol(int[][] board) {
+        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
+            for (int colIndex = 0; colIndex < board[rowIndex].length; colIndex++) {
+                if (board[rowIndex][colIndex] == 0) {
+                    return colIndex;
+                }
+            }
+        }
+        return -1;
+    }
+
     public static boolean isHaveZero(int[][] board) {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -199,5 +360,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSolve;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblBoard;
     // End of variables declaration//GEN-END:variables
 }
