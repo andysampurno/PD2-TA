@@ -41,6 +41,7 @@ public class Main extends javax.swing.JFrame {
         tblBoard = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnSolve = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +61,7 @@ public class Main extends javax.swing.JFrame {
                 "", "", "", "", "", "", "", "", ""
             }
         ));
+        tblBoard.setGridColor(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(tblBoard);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -69,6 +71,13 @@ public class Main extends javax.swing.JFrame {
         btnSolve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSolveActionPerformed(evt);
+            }
+        });
+
+        btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
             }
         });
 
@@ -87,7 +96,8 @@ public class Main extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
+                                .addComponent(btnReset)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSolve)))))
                 .addContainerGap())
         );
@@ -99,7 +109,9 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSolve)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSolve)
+                    .addComponent(btnReset))
                 .addContainerGap())
         );
 
@@ -110,17 +122,10 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                try{
                 if (tblBoard.getValueAt(i, j) != null) {
                     board[i][j] = Integer.parseInt(tblBoard.getValueAt(i, j).toString());
                 } else {
                     board[i][j] = 0;
-                }
-                } catch(Exception e) {
-                    System.out.println(i);
-                    System.out.println(j);
-                    System.out.println(Integer.parseInt(tblBoard.getValueAt(i, j).toString()));
-                    throw e;
                 }
             }
         }
@@ -140,6 +145,16 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnSolveActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                tblBoard.setValueAt(null, i, j);
+                board[i][j] = 0;
+            }
+        }
+    }//GEN-LAST:event_btnResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,6 +187,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
+                tblBoard.setShowGrid(true);
             }
         });
     }
@@ -360,9 +376,10 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSolve;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblBoard;
+    private static javax.swing.JTable tblBoard;
     // End of variables declaration//GEN-END:variables
 }
